@@ -1,0 +1,40 @@
+{% extends 'base.html'  %}
+
+{% block title %}
+checkout
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-10 col-12">
+      <h2 class="mt-4" style='text-decoration: underline'> 
+        You are going to Adopt: </h2>
+      <br>
+      <ul style="list-style: none;">
+        {% for ad in adopt %}
+        <li>
+          <h3 class='text-light'>{{ad.cat_name}}</h3>
+          <img src="{{ad.cat_img}}" class="img-thumbnail">
+        </li>
+        <br>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <br>
+    <h3><b>Total cost for adoption: ${{cost.price}}</b></h3>
+
+    <br>
+
+  <h2 class="mb-4"> Thanks for Adopting </h2>
+  <form>
+  <button class="btn btn-danger btn-sm mb-4"
+                formaction='/users/{{user.username}}/finished'
+                formmethod="POST">
+            Pay and Exit
+  </button>
+  </form>
+  
+  {% endblock %}

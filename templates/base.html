@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>
+   FeedBack  {% block title %} {% endblock %}
+  </title>
+  <link rel="stylesheet"
+        href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+</head>
+<body class='bg-info'>
+<nav class="navbar sticky-top navbar-expand-lg justify-content-between
+navbar-dark bg-dark">
+  <div class="container">
+  <a class="navbar-brand"> Catdopt </a>
+  <ul class="nav navbar-nav flex-row float-right">
+    {% if 'username' in session %}
+    <li class="nav-item">
+      <a class="nav-link pr-3 text-light" href="/logout">Logout</a>
+    </li>
+    {% else %}
+    <li class="nav-item">
+      <a class="nav-link pr-3 text-light" href="/login">Login</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-light" href="/signup">Sign up</a>
+    </li>
+    {% endif %}
+  </ul>
+</div>
+</nav>
+<div class="container mt-5 container-fluid mb-2">
+  {% for msg in get_flashed_messages() %}
+  <div class="alert alert-info">{{ msg }}</div>
+  {% endfor %}
+
+  {% block content %}
+  {% endblock %}
+
+</div>
+</body>
+</html>

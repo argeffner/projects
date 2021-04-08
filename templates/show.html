@@ -1,0 +1,95 @@
+{% extends 'base.html'  %}
+
+{% block title %}
+{{ user.username}}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-10 col-12">
+    <h2 class="mt-4 mb-5 text-warning"><b>Search From Our Variety of Cats</b></h2>
+    <h3><b>make sure to search by breed</b></h3>
+
+    <!-- <form action="/user/{{user.username}}/options" method="POST">
+    <div class="input-group mb-3">
+      <select name='feline' class="selectpicker form-control" id="input">
+        <option selected>Choose breed</option>
+        {% for c in data %}
+          <option value="{{ c.breed }}">{{ c.breed }}</option>
+        {% endfor %}
+      </select>
+      <div class="input-group-append">
+        <button class="btn btn-outline-dark" type="submit">Select</button>
+      </div>
+    </div>
+  </form> -->
+    <form action="/users/{{user.username}}/options">
+        <input type="text" name="feline" class="form-control" placeholder="name of breed">
+        <button class="btn btn-secondary"
+        formmethod="POST"
+        >Search</button>
+    </form>
+    
+  </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-10 col-12">
+      <h2 class="mt-4">Here are the kitties</h2>
+      <br>  
+      <ul style="list-style: none;">
+        {% for c in cats %}
+        <li>
+          <form>
+            <a href="/users/{{user.username}}/info/{{c.id}}">
+            <h2>{{c.breed}}</h2></a>
+            <button class="btn float-right btn-danger btn-sm"
+                formaction="/users/{{user.username}}/delete/{{c.id}}"
+                formmethod="POST">
+            Delete Cat
+            </button>
+            <img src="{{c.img}}" class="img-thumbnail"></a>
+          </form>
+
+            <h3>Choose the cat you want by giving it a name</h3>
+            <form action="/users/{{user.username}}/adopt/{{c.id}}">
+            <div class="input-group mb-3">
+            <input type="text" name="cat_name" class="form-control" placeholder="choose a name for the cat" aria-label="choose a name for the cat" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-primary" 
+              formmethod="POST">name</button>
+            </div>
+          </div>
+          </form>
+        </li>
+        <br>
+        <hr>
+        {% endfor %}
+      </ul>
+      
+    </div>
+  </div>
+  <br>
+  <hr>
+<div class="row">
+<h1>Cats I Want to Adopt</h1>
+<ul style="list-style: none;">
+  {% for a in adopt %}
+  <li>
+    <h3>{{a.cat_name}}</h3>
+    <img src="{{a.cat_img}}" class="img-thumbnail">
+  </li>
+  {% endfor %}
+</ul>
+<div class="row">
+ <div class="pull-right">
+  <form action="/users/{{user.username}}/checkout">
+    <button  class="btn btn-outline-dark btn-lg" 
+    formmethod="POST">
+      <span class="glyphicon glyphicon-chevron-right">Ready to adopt</span>
+    </button> 
+  </form>
+ </div>
+ </div>
+</div>
+  {% endblock %}
