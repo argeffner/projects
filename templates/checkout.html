@@ -6,35 +6,36 @@ checkout
 
 {% block content %}
 
-<div class="row">
-    <div class="col-sm-10 col-12">
-      <h2 class="mt-4" style='text-decoration: underline'> 
-        You are going to Adopt: </h2>
-      <br>
-      <ul style="list-style: none;">
+
+      <h2 class="mt-4 text-center display-5"> 
+        You are going to Adopt: 
+      </h2>
+  
+      <div class="d-flex flex-wrap justify-content-around">
         {% for ad in adopt %}
-        <li>
-          <h3 class='text-light'>{{ad.cat_name}}</h3>
-          <img src="{{ad.cat_img}}" class="img-thumbnail">
-        </li>
-        <br>
+        <div class="card mt-4" style="background-color:  rgb(92, 195, 211); width: 20rem; height: 17rem; border: none;">
+          <h3 class='text-light text-center'>{{ad.cat_name}}</h3>
+          <img src="{{ad.cat_img}}" class="img-thumbnail" style="display: center; height: 14rem; width: 20rem">
+        </div>
         {% endfor %}
-      </ul>
-    </div>
-  </div>
+      </div>
+    
   <hr>
-  <br>
-    <h3><b>Total cost for adoption: ${{cost.price}}</b></h3>
-
+    <h3 class="text-center fixed-bottom col-sm-4" 
+        style="margin-left: auto; margin-right: auto; bottom: 100px; 
+               background-color: rgb(173, 244, 209); border-radius: 5px;
+               text-decoration: underline;">
+      <b>Total cost for adoption: ${{cost.price}}</b>
+    </h3>
     <br>
-
-  <h2 class="mb-4"> Thanks for Adopting </h2>
+<footer style="position: absolute; bottom: 10px;">
   <form>
-  <button class="btn btn-danger btn-sm mb-4"
+  <button class="btn btn-outline-danger btn-sm mb-2"
                 formaction='/users/{{user.username}}/finished'
                 formmethod="POST">
             Pay and Exit
   </button>
   </form>
+</footer>
   
   {% endblock %}

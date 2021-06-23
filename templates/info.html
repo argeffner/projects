@@ -8,15 +8,17 @@
 
 <div class="row">
     <div class="col-sm-10 col-12">
-      <h2 class="mt-4">Breed info</h2>
-      <ul>
-        {% for res in responses %}
-        <li> {{res['breed']}}</li>
-        <li> {{res['origin']}}</li>
-        <li> {{res['life_span']}} years</li>
+      <h2 class="mt-4"><u>Breed info</u></h2>
+      <br>
+      <ul class="text-left list-inline" style="list-style: none;">
+      
+        <li style="font-size: 25px; color: white;">Breed: {{responses[0]['breed']}}</li>
+        <li style="font-size: 25px; color: white;">Origins: {{responses[0]['origin']}}</li>
+        <li style="font-size: 25px; color: white;">Life Span {{responses[0]['life_span']}} (years)</li>
         <br>
-        <p> {{res['description']}} </p>
-        {% endfor %}
+        <h4 class="mt-4" style='color: #0c0a05; text-decoration: underline;'>Cat Facts:</h4>
+        <p style="font-size: 25px; color: white;"> {{responses[0]['description']}} </p>
+        
       </ul>
       <br>
       <form action="/users/{{user.username}}">

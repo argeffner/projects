@@ -6,21 +6,49 @@ Homepage
 
 {% block content %}
 
-<div class="row">
-    <div class="col-sm-10 col-12">
-      <h2 class="mt-4">Welcome to CatDopt</h2>
+
+  <h2 class="mt-4 text-center" style="font-family: 'Libre Baskerville', serif">
+    Welcome to CatDopt
+  </h2>
+    <div class="col-sm-12 col-12 text-center" style="font-family: 'Libre Baskerville', serif">
       <br>
-        <b>Signup or Login to get started</b>
+        <h5 class='mb-2'>
+          <b>
+          <a href="/signup">Signup</a> 
+          or 
+          <a href="/login">Login</a> 
+          to get started
+        </b>
+      </h5>
     </div>
-</div>
-<hr>
-<div class="row">
-    <div class="col-sm-10 col-12">
-      <p> Find the cat that you like and get 
-          details about the breed. As part of the 
-          process you get to name your cat.
-      </p>
+    <div class="img-container">
+      <img src="https://img.theculturetrip.com/wp-content/uploads/2018/05/maxpixel-freegreatpicture-com-persian-cat-the-difference-is-cat-cute-white-cat-1092371.jpg"
+           class="changer" id="shiftImg" style="width: 700px; 
+                                                height: 400px; 
+                                                border: 5px solid #555;
+                                                display: block;
+                                                margin-right: auto;
+                                                margin-left: auto;
+                                                text-align: center;
+                                                border-radius: 5px;
+                                                z-index: 1;">
     </div>
-</div>
-  
+  <hr>
+  <div class="row">
+    <div class="col-sm-12 col-12">
+      <div class="text-center ml-2" style="font-size: 25px; 
+                                     color: antiquewhite; 
+                                     font-family: 'Libre Baskerville', serif;">
+         <div>
+           <span>Find the cat that you like</span>
+         </div>
+         <div>
+           <span>Get details about the breed</span>
+         </div>
+         <div>
+           <span>Name your cat</span>
+         </div>
+      </div>
+    </div>
+  </div>
   {% endblock %}

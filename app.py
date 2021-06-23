@@ -4,6 +4,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from models import Cats, Adopt, db, connect_db, User, Cost
 from forms import NewUserForm, LoginForm, DeleteForm
 from werkzeug.exceptions import Unauthorized
+from breed_list import data_breeds
 
 app = Flask(__name__)
 
@@ -12,11 +13,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'meow'
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
-toolbar = DebugToolbarExtension(app)
+# toolbar = DebugToolbarExtension(app)
 
 CAT_KEY = "results"
 IMG_KEY = 'kitty'
-data_breeds = ['abyssinian', 'aegean', 'american bobtail', 'american curl', 'american shorthair', 'american wirehair', 'arabian mau', 'balinese', 'bambino', 'bengal', 'birman', 'bombay', 'british longhair', 'british shorthair', 'burmese', 'burmilla', 'california spangled', 'chantilly-tiffany', 'chartreux', 'chausie', 'cheetoh', 'colorpoint shorthair', 'cornish rex', 'cyprus', 'devon rex', 'donskoy', 'dragon li', 'egyptian mau', 'european burmese', 'exotic shorthair', 'havana brown', 'himalayan', 'japanese bobtail', 'javanese', 'khao manee', 'korat', 'kurilian', 'laperm', 'maine coon', 'malayan', 'manx', 'munchkin', 'nebelung', 'norwegian forest cat', 'ocicat', 'oriental', 'persian', 'pixie-bob', 'ragamuffin', 'ragdoll', 'russian blue', 'savannah', 'scottish fold', 'selkirk rex', 'siamese', 'siberian', 'singapura', 'snowshoe', 'somali', 'sphynx', 'tonkinese', 'toyger', 'turkish angora', 'turkish van', 'york chocolate']
 
 connect_db(app)
 db.create_all()
@@ -33,6 +33,7 @@ def home_route():
     """Show form."""
     # show intro and provide login or signup
     return render_template('home.html')
+
 
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -57,6 +58,7 @@ def signup():
         return redirect(f"/users/{user.username}")
     else:  
         return render_template("signup.html", form=form)
+
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -84,34 +86,67 @@ def login():
     return render_template('login.html', form=form)
 
 
+
 @app.route('/logout')
 def logout():
     """Handle logout of user."""
-
+    
     session.pop("username")
     return redirect('/')
 
 
+
 @app.route('/users/<username>')
 def show_username(username):
-    if "username" not in session or username != session['username']:
-        # flash('You need to Login or Signup')
-        # return redirect ('/')
-        raise Unauthorized()
 
+    if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
+        raise Unauthorized()
+    
+    lbreeds = data_breeds
     user = User.query.get(username)
     form = DeleteForm()
     cats = Cats.query.all()
-    adopt = Adopt.query.all()
 
-    return render_template('show.html', user=user, form=form, cats=cats, adopt=adopt)
+    return render_template('show.html', user=user, form=form, cats=cats, breeds=lbreeds)
 
-############# Doesn't work ######################
-@app.route('/users/<username>/delete', methods=['POST'])
-def delete_user(username):
+
+
+@app.route('/users/<username>/history')
+def fake_history(username):
+
     if "username" not in session or username != session['username']:
-        # flash('You need to Login or Register')
-        # return redirect ('/')
+        flash('You need to Login or Signup')
+        return redirect ('/')
+        raise Unauthorized()
+
+    user = User.query.get(username) 
+
+    return render_template('history.html', user=user)
+
+
+@app.route('/users/<username>/contact')
+def fake_contact(username):
+
+    if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
+        raise Unauthorized()
+
+    user = User.query.get(username) 
+
+    return render_template('contact.html', user=user)
+
+
+
+@app.route('/users/<username>/delete', methods=['POST']) 
+def delete_user(username):
+    "deletes the user from the database and logs out"
+
+    if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
         raise Unauthorized()
 
     user = User.query.get(username)
@@ -123,12 +158,16 @@ def delete_user(username):
     return redirect('/')
 
 
+
 @app.route('/users/<username>/options', methods=['POST'])
 def get_data(username):
 
     if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
         raise Unauthorized()
     
+    lbreeds = data_breeds
     user = User.query.get(username)
     breed = request.form.get("feline")
     breed = breed.lower()
@@ -155,17 +194,18 @@ def get_data(username):
                     cats = Cats(img=img[j]['url'], breed=cat[i]['name'])
                     db.session.add(cats)
                     db.session.commit()
-                # return redirect(f'/users/{user.username}')
                 kitties = Cats.query.all()
-                adopt = Adopt.query.all()
-                # flash(len(img))
-                return render_template('show.html', cats=kitties, user=user, adopt=adopt)
+                
+                return render_template('show.html', cats=kitties, user=user, breeds=lbreeds)
+
 
 
 @app.route('/users/<username>/info/<int:id>', methods=['GET'])
 def get_breed_info(username, id):
 
     if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
         raise Unauthorized()
 
     user = User.query.get(username)
@@ -187,9 +227,14 @@ def get_breed_info(username, id):
     return render_template('info.html', responses=responses, user=user)
 
 
-@app.route('/users/<username>/delete/<int:id>', methods=['POST'])
-def delete_cat(username, id):
+
+@app.route('/users/<username>/delete/<int:id>/main', methods=['POST']) 
+def delete_cat_main(username, id):
+    "deletes cats from the main platform page"
+
     if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
         raise Unauthorized()
 
     user = User.query.get(username)
@@ -197,18 +242,38 @@ def delete_cat(username, id):
 
     db.session.delete(cat)
     db.session.commit()
-    flash('Cat deleted from list.')
+    flash(f'The {cat.breed} has been removed.')
 
     return redirect(f'/users/{user.username}')
+
+
+
+@app.route('/users/<username>/adopt')
+def adopt_page(username):
+
+    if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
+        raise Unauthorized()
+
+    user = User.query.get(username)
+    adopt = Adopt.query.all()
+
+    return render_template('adopt.html', user=user, adopt=adopt)
+
 
 
 @app.route('/users/<username>/adopt/<int:id>', methods=['POST'])
 def adopt_a_cat(username, id):
 
     if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
         raise Unauthorized()
 
     cat_name = request.form.get("cat_name")
+    # capitalize the cat name
+    cat_name = cat_name.capitalize()
     user = User.query.get(username)
     cat = Cats.query.get_or_404(id)
     cat_img = cat.img
@@ -217,18 +282,41 @@ def adopt_a_cat(username, id):
     adopt = Adopt(user=u, cat_name=cat_name, cat_img=cat_img)
     db.session.add(adopt)
     db.session.commit()
-    # delete causes foreignkey issue
+    
     db.session.delete(cat)
     db.session.commit()
-    # flash('Item deleted.')
+    flash(f'The {cat.breed} that you named {adopt.cat_name} is now in the adopt page.')
 
     return redirect(f'/users/{user.username}')
+
+
+
+@app.route('/users/<username>/delete/<int:id>/adopt', methods=['POST']) 
+def delete_cat_from_adopt(username, id):
+    "deletes cats from the adopt page"
+
+    if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
+        raise Unauthorized()
+
+    user = User.query.get(username)
+    adopt = Adopt.query.get_or_404(id)
+
+    db.session.delete(adopt)
+    db.session.commit()
+    flash(f'{adopt.cat_name} has been removed from your list of choices.')
+
+    return redirect(f'/users/{user.username}/adopt')
+
 
 
 @app.route('/users/<username>/checkout', methods=['POST'])
 def pay_for_adoption(username):
 
     if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
         raise Unauthorized()
     
     user = User.query.get(username) 
@@ -239,15 +327,17 @@ def pay_for_adoption(username):
     cost = Cost(user_id=username, price=price)
     db.session.add(cost)
     db.session.commit()
-    # since there is no pay route it will simply logout
-    # return redirect('/logout')
+
     return render_template('checkout.html', cost=cost, adopt=adopt, user=user)
+
 
 
 @app.route('/users/<username>/finished', methods=['POST'])
 def clear_all(username):
 
     if "username" not in session or username != session['username']:
+        flash('You need to Login or Signup')
+        return redirect ('/')
         raise Unauthorized()
 
     user = User.query.get(username) 
@@ -265,6 +355,8 @@ def clear_all(username):
         db.session.delete(c)
         db.session.commit()
 
+    flash("Thank you for adopting. Take great care of your new kitty or kitties!")
+
     return redirect('/logout')
 
 
@@ -273,37 +365,34 @@ def clear_all(username):
 
 
 
+# This is for testing only (used to test the foreign API)
 
-
-
-# This is for testing only 
-
-@app.route('/test')
-def get_data_test():
-    breed = request.args["newish"]
-    q = {'name': breed}
-    res = requests.get(url, headers=headers, params=q)
-    cat = res.json()
+# @app.route('/test')
+# def get_data_test():
+#     breed = request.args["newish"]
+#     q = {'name': breed}
+#     res = requests.get(url, headers=headers, params=q)
+#     cat = res.json()
     
-    for i in range(0, len(cat)):
-        q_img = {'limit': '4', "breed_id": cat[i]['id']}
-        r_img = requests.get(url_img, headers=headers, params=q_img)
-        img = r_img.json()
-        # print img based on length 
-        print(len(img))
-        if len(img) > 0:
-            for j in range(0, len(img)):
-                print(img[j]['url']) 
+#     for i in range(0, len(cat)):
+#         q_img = {'limit': '4', "breed_id": cat[i]['id']}
+#         r_img = requests.get(url_img, headers=headers, params=q_img)
+#         img = r_img.json()
+#         # print img based on length 
+#         print(len(img))
+#         if len(img) > 0:
+#             for j in range(0, len(img)):
+#                 print(img[j]['url']) 
     
     
      
-    # Early stage testing nothing here is currently permanent
+#     # Early stage testing nothing here is currently permanent
     
    
-    # make data bases with data about breed, origin, lifespan, description
-    print (cat[0]['name'])
-    print(cat[0]['origin'])
-    print(cat[0]['life_span'], 'years')
-    print(cat[0]['description'])
-    print('******************************************************************')
-    return jsonify(cat)  
+#     # make data bases with data about breed, origin, lifespan, description
+#     print (cat[0]['name'])
+#     print(cat[0]['origin'])
+#     print(cat[0]['life_span'], 'years')
+#     print(cat[0]['description'])
+#     print('******************************************************************')
+#     return jsonify(cat)  

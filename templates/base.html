@@ -3,24 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <title>
-   FeedBack  {% block title %} {% endblock %}
+  {% block title %}   {% endblock %}
   </title>
-  <link rel="stylesheet"
-        href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+  <link href = "https://fonts.googleapis.com/icon?family=Material+Icons" rel = "stylesheet">
+  
+  
+  <style> 
+  .button-container {
+  position:relative
+  }
+  .button-container .btn {
+  position: absolute;
+  right: -11px; 
+  top: 19px;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  border: none;
+  cursor: pointer;
+  }
+  
+  i.mysize {font-size: 12px;} 
+  i.cart {font-size: 10px;} 
+  i.md {font-size: 25px;}
+  
+  
+  @keyframes flickerAnimation {
+  0%   { opacity:0; }
+  5%   { opacity:1; }
+  95%  { opacity:1; }
+  100% { opacity:0; }
+  }
+  @-o-keyframes flickerAnimation{
+  0%   { opacity:0; }
+  5%   { opacity:1; }
+  95%  { opacity:1; }
+  100% { opacity:0; }
+  } 
+  @-moz-keyframes flickerAnimation{
+  0%   { opacity:0; }
+  5%   { opacity:1; }
+  95%  { opacity:1; }
+  100% { opacity:0; }
+  }
+  @-webkit-keyframes flickerAnimation{
+  0%   { opacity:0; }
+  5%   { opacity:1; }
+  95%  { opacity:1; }
+  100% { opacity:0; }
+  }
+  .changer {
+   -webkit-animation: flickerAnimation 12s infinite;
+   -moz-animation: flickerAnimation 12s infinite;
+   -o-animation: flickerAnimation 12s infinite;
+    animation: flickerAnimation 12s infinite;
+  }
+  </style>
+
 </head>
-<body class='bg-info'>
+
+<body style="background-color: rgb(92, 195, 211);">
+  <!-- First Navbar  -->
 <nav class="navbar sticky-top navbar-expand-lg justify-content-between
 navbar-dark bg-dark">
-  <div class="container">
+  <div class="container-fluid">
   <a class="navbar-brand"> Catdopt </a>
   <ul class="nav navbar-nav flex-row float-right">
     {% if 'username' in session %}
     <li class="nav-item">
-      <a class="nav-link pr-3 text-light" href="/logout">Logout</a>
+      <a class="nav-link pr-3 text-light" href="/logout"><i class = "material-icons md">logout</i></a>
     </li>
+    <li class="nav-item ml-2">
+      <form action="/users/{{user.username}}/checkout">
+        <button  class="btn btn-outline-light btn-sm" 
+        formmethod="POST">
+        <i class = "material-icons mt-1">shopping_cart</i>
+        </button> 
+      </form>
+    </li>
+    
     {% else %}
     <li class="nav-item">
-      <a class="nav-link pr-3 text-light" href="/login">Login</a>
+      <a class="nav-link text-light" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link pr-3 text-light" href="/login"><i class = "material-icons md">login</i></a>
     </li>
     <li class="nav-item">
       <a class="nav-link text-light" href="/signup">Sign up</a>
@@ -29,14 +96,70 @@ navbar-dark bg-dark">
   </ul>
 </div>
 </nav>
+
+<!-- Second Navbar -->
+{% if 'username' in session %}
+<nav class="navbar navbar-expand-lg justify-content-between navbar-light bg-light">
+  <div class="collapse navbar-collapse container-fluid"  id="navbarNavAltMarkup">
+
+       <div id="username-icon" class="ml-auto">
+        <i class = "float-left material-icons ">account_circle</i>
+        <span class= "align-top">{{user.username}}</span> 
+      </div>
+       
+     <ul class="nav navbar-nav flex-row ">
+
+       <li class="nav-item nav-link">
+         <form>
+           <button class="btn float-right btn-dark btn-sm"
+               formaction="/users/{{user.username}}">
+               <i class = "material-icons mysize">pets</i>
+             Main Page
+           </button>
+         </form>
+       </li>
+
+         <li class="nav-item nav-link">
+           <form>
+             <button class="btn float-right btn-dark btn-sm"
+                 formaction="/users/{{user.username}}/adopt">
+                 <i class = "material-icons mysize">favorite</i>
+               Adopt Page
+             </button>
+           </form>
+         </li>
+         <li class="nav-item dropdown">
+           <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             More Options
+           </a>
+           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+             <a class="dropdown-item" href="/users/{{user.username}}/contact">Contact Us</a>
+             <a class="dropdown-item" href="/users/{{user.username}}/history">History</a>
+             <div class="dropdown-divider"></div>
+             <a class="dropdown-item" href="/users/{{user.username}}/delete">Delete Account</a>
+           </div>
+         </li>
+     </ul>
+ </div>
+</nav>
+  {% endif %}
 <div class="container mt-5 container-fluid mb-2">
   {% for msg in get_flashed_messages() %}
   <div class="alert alert-info">{{ msg }}</div>
+
   {% endfor %}
 
   {% block content %}
   {% endblock %}
 
 </div>
+<!-- <footer class="pt-2 text-muted border-top" style="position: absolute; text-align: center; bottom: 10px; width: 100%">
+  <span>&copy copyright 2020</span>
+</footer>  -->
+
+<script src="../static/app.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

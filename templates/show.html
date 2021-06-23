@@ -5,91 +5,97 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col-sm-10 col-12">
-    <h2 class="mt-4 mb-5 text-warning"><b>Search From Our Variety of Cats</b></h2>
-    <h3><b>make sure to search by breed</b></h3>
 
-    <!-- <form action="/user/{{user.username}}/options" method="POST">
-    <div class="input-group mb-3">
-      <select name='feline' class="selectpicker form-control" id="input">
-        <option selected>Choose breed</option>
-        {% for c in data %}
-          <option value="{{ c.breed }}">{{ c.breed }}</option>
-        {% endfor %}
-      </select>
-      <div class="input-group-append">
-        <button class="btn btn-outline-dark" type="submit">Select</button>
-      </div>
-    </div>
-  </form> -->
+<h2 class="mt-4 mb-5 text-center display-5" style="color: rgb(241, 218, 247)">
+  <b>Search From Our Variety of Cats</b>
+</h2>
+
+<div class="row">
+  <div class="col-sm-12">
+
+    <h3>
+      <b>search by breed</b>
+    </h3>
     <form action="/users/{{user.username}}/options">
-        <input type="text" name="feline" class="form-control" placeholder="name of breed">
+      <div class="input-group mb-3">
+        <datalist id="allbreeds">
+          {% for breed in breeds %}
+          <option>{{breed}}</option>
+          {% endfor %}
+        </datalist>
+        <input type="text" name="feline" class="form-control" placeholder="name of breed" autocomplete="on" list="allbreeds">
+        <div class="input-group-append">
         <button class="btn btn-secondary"
-        formmethod="POST"
-        >Search</button>
+        formmethod="POST">
+        Search
+        </button>
+        </div>
+      </div>
+      
     </form>
-    
   </div>
 </div>
 <hr>
-<div class="row">
-    <div class="col-sm-10 col-12">
-      <h2 class="mt-4">Here are the kitties</h2>
-      <br>  
-      <ul style="list-style: none;">
-        {% for c in cats %}
-        <li>
-          <form>
-            <a href="/users/{{user.username}}/info/{{c.id}}">
-            <h2>{{c.breed}}</h2></a>
-            <button class="btn float-right btn-danger btn-sm"
-                formaction="/users/{{user.username}}/delete/{{c.id}}"
-                formmethod="POST">
-            Delete Cat
-            </button>
-            <img src="{{c.img}}" class="img-thumbnail"></a>
-          </form>
 
-            <h3>Choose the cat you want by giving it a name</h3>
-            <form action="/users/{{user.username}}/adopt/{{c.id}}">
-            <div class="input-group mb-3">
-            <input type="text" name="cat_name" class="form-control" placeholder="choose a name for the cat" aria-label="choose a name for the cat" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-              <button class="btn btn-primary" 
-              formmethod="POST">name</button>
-            </div>
-          </div>
-          </form>
-        </li>
-        <br>
-        <hr>
-        {% endfor %}
-      </ul>
+    <div class="col-sm-12 mb-5">
+      <h2 class="mt-4 text-center">Here are the kitties</h2>
       
+      <div class="d-flex flex-wrap justify-content-around">
+        {% for c in cats %}
+
+          <div id='flex container'>
+          <div class="card mt-4" style="background-color: rgb(92, 195, 211); width: 20rem; height: 23rem; border: none">
+            <div class="card-body">
+              <h5 class="text-light ml-4"> Breed: 
+                 <a href="/users/{{user.username}}/info/{{c.id}}">{{c.breed}}</a></h5>
+            <div class="button-container"> 
+              <form>
+                <button class="btn float-right btn-danger btn-sm" 
+                  formaction="/users/{{user.username}}/delete/{{c.id}}/main"
+                  formmethod="POST">
+                <svg class="white;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+                </button>
+             <img src="{{c.img}}" class="img-thumbnail mt-4" style="display: flex; height: 12rem; width: 18rem">
+             </form>
+            </div>
+            </div>
+
+            <div class="card body" style="background-color: rgb(92, 195, 211); border: none">
+             <h4 class="mt-2 text-center text-light">Name and Adopt</h4>
+             <form action="/users/{{user.username}}/adopt/{{c.id}}">
+              <div class="input-group mb-3 col-12">
+              <input type="text" name="cat_name" class="form-control" placeholder="choose a name for the cat" aria-label="choose a name for the cat" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-success" 
+                formmethod="POST">name</button>
+              </div>
+              </div>
+             </form>
+            </div>
+        </div>
+        </div>
+      
+        {% endfor %}
     </div>
-  </div>
-  <br>
-  <hr>
-<div class="row">
-<h1>Cats I Want to Adopt</h1>
-<ul style="list-style: none;">
-  {% for a in adopt %}
-  <li>
-    <h3>{{a.cat_name}}</h3>
-    <img src="{{a.cat_img}}" class="img-thumbnail">
-  </li>
-  {% endfor %}
-</ul>
-<div class="row">
- <div class="pull-right">
-  <form action="/users/{{user.username}}/checkout">
-    <button  class="btn btn-outline-dark btn-lg" 
-    formmethod="POST">
-      <span class="glyphicon glyphicon-chevron-right">Ready to adopt</span>
-    </button> 
-  </form>
- </div>
- </div>
+  
+    <br>
+
+    <footer class="ml-3" style="position: absolute; bottom: -30px;">
+    <div class="btn-toolbar float-left mt-2" role="toolbar" aria-label="Toolbar with button groups">
+      <div class="btn-group mr-2" role="group" aria-label="First group">
+       <form>
+         <button class="btn float-right btn-outline-primary btn-lg mb-2"
+             formaction="/users/{{user.username}}/adopt">
+             <i class = "material-icons mysize">favorite</i>
+           Adopt
+         </button>
+       </form>
+      </div>
+    </div>
+  </footer>
 </div>
+
   {% endblock %}

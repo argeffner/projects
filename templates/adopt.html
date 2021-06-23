@@ -1,0 +1,45 @@
+{% extends 'base.html'  %}
+
+{% block title %}
+checkout
+{% endblock %}
+
+{% block content %}
+ 
+    <h1 class='text-center display-4'>Cats I Want to Adopt</h1>
+    <br>
+    
+    <div class="d-flex flex-wrap justify-content-around">
+      {% for a in adopt %}
+      <div id='flex container'>
+        <div class="card mt-4" style="background-color:  rgb(92, 195, 211); width: 20rem; height: 17rem; border: none;">
+        <h3 class='ml-2 mb-2 text-white text-center'>{{a.cat_name}}</h3>
+        <div class="button-container"> 
+            <form>
+              <button class="btn float-right btn-danger btn-sm" 
+                formaction="/users/{{user.username}}/delete/{{a.adopt_id}}/adopt"
+                formmethod="POST">
+              <svg class="white;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+              </svg>
+              </button>
+           </form>
+          </div>
+        
+        <img src="{{a.cat_img}}" class="img-thumbnail" style="display: center; height: 14rem; width: 20rem">
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+     <br>
+    
+      <footer class="pt-3 mt-4 text-muted border-top d-flex" style="position: absolute; bottom: 10px; width: 85%">
+        <h4> Find your cats in the cart &nbsp;&nbsp;</h4>
+        
+        <img src="https://img.icons8.com/ios-filled/50/000000/pet-commands-follow.png" style="height: 2%; width: 2%;"/>
+        <span><i class = "material-icons" style="position: relative; bottom: 0;">shopping_cart</i></span>
+    </footer> 
+    
+
+  {% endblock %}
