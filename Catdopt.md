@@ -1,7 +1,7 @@
 ## Catdopt
 
 Catdopt is capstone designed as a project for the springboard software engineering track website. You can access the website by clicking 
-[here](http://github.com)  
+[here](www/) (currently website is having issues with heroku I will fix in the future)  
 
 
 ### Purpose
