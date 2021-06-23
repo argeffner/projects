@@ -8,11 +8,13 @@ from breed_list import data_breeds
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///catdopt"
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    os.environ.get('DATABASE_URL', "postgresql:///catdopt"))
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'meow'
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "nevertell")
 # toolbar = DebugToolbarExtension(app)
 
 CAT_KEY = "results"
